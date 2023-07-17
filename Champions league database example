@@ -1,0 +1,74 @@
+CREATE TABLE Takimlar (
+    takim_id INT PRIMARY KEY,
+    takim_ad VARCHAR(100) NOT NULL,
+    sehir VARCHAR(100),
+    stad VARCHAR(100)
+);
+
+-- Maclar tablosu
+CREATE TABLE Maclar (
+    mac_id INT PRIMARY KEY,
+    ev_sahibi_id INT,
+    deplasman_id INT,
+    tarih DATE,
+    skor_ev_sahibi INT,
+    skor_deplasman INT,
+    FOREIGN KEY (ev_sahibi_id) REFERENCES Takimlar(takim_id),
+    FOREIGN KEY (deplasman_id) REFERENCES Takimlar(takim_id)
+);
+
+-- GolTipleri tablosu
+CREATE TABLE GolTipleri (
+    gol_tipi_id INT PRIMARY KEY,
+    gol_tipi_ad VARCHAR(50) NOT NULL
+);
+
+-- Goller tablosu
+CREATE TABLE Goller (
+    gol_id INT PRIMARY KEY,
+    mac_id INT,
+    gol_tipi_id INT,
+    dakika INT,
+    FOREIGN KEY (mac_id) REFERENCES Maclar(mac_id),
+    FOREIGN KEY (gol_tipi_id) REFERENCES GolTipleri(gol_tipi_id)
+);
+
+-- Oyuncular tablosu
+CREATE TABLE Oyuncular (
+    oyuncu_id INT PRIMARY KEY,
+    takim_id INT,
+    oyuncu_ad VARCHAR(100) NOT NULL,
+    yas INT,
+    pozisyon VARCHAR(50),
+    FOREIGN KEY (takim_id) REFERENCES Takimlar(takim_id)
+);
+
+-- Takimlar örneği
+INSERT INTO Takimlar (takim_id, takim_ad, sehir, stad) VALUES
+(1, 'Real Madrid', 'Madrid', 'Santiago Bernabeu'),
+(2, 'Barcelona', 'Barcelona', 'Camp Nou'),
+(3, 'Bayern Münih', 'Münih', 'Allianz Arena');
+
+-- Maclar örneği
+INSERT INTO Maclar (mac_id, ev_sahibi_id, deplasman_id, tarih, skor_ev_sahibi, skor_deplasman) VALUES
+(1, 1, 2, '2023-06-01', 3, 1),
+(2, 3, 1, '2023-06-05', 2, 2);
+
+-- GolTipleri örneği
+INSERT INTO GolTipleri (gol_tipi_id, gol_tipi_ad) VALUES
+(1, 'Normal'),
+(2, 'Kendi kalesine'),
+(3, 'Penaltı');
+
+-- Goller örneği
+INSERT INTO Goller (gol_id, mac_id, gol_tipi_id, dakika) VALUES
+(1, 1, 1, 10),
+(2, 1, 2, 30),
+(3, 2, 1, 15),
+(4, 2, 3, 60);
+
+-- Oyuncular örneği
+INSERT INTO Oyuncular (oyuncu_id, takim_id, oyuncu_ad, yas, pozisyon) VALUES
+(1, 1, 'Karim Benzema', 33, 'Forvet'),
+(2, 1, 'Sergio Ramos', 35, 'Defans'),
+(3, 1, 'Luka Modric', 36, 'Orta saha');
