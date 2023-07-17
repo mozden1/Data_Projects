@@ -1,0 +1,358 @@
+USE [master]
+GO
+/****** Object:  Database [instagram]    Script Date: 17.07.2023 10:07:57 ******/
+CREATE DATABASE [instagram]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'instagram', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\instagram.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'instagram_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.SQLEXPRESS\MSSQL\DATA\instagram_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [instagram] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [instagram].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [instagram] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [instagram] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [instagram] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [instagram] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [instagram] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [instagram] SET AUTO_CLOSE ON 
+GO
+ALTER DATABASE [instagram] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [instagram] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [instagram] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [instagram] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [instagram] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [instagram] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [instagram] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [instagram] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [instagram] SET  ENABLE_BROKER 
+GO
+ALTER DATABASE [instagram] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [instagram] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [instagram] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [instagram] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [instagram] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [instagram] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [instagram] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [instagram] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [instagram] SET  MULTI_USER 
+GO
+ALTER DATABASE [instagram] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [instagram] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [instagram] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [instagram] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [instagram] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [instagram] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+ALTER DATABASE [instagram] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [instagram] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [instagram]
+GO
+/****** Object:  Table [dbo].[comments]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[comments](
+	[comment_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[post_id] [int] NOT NULL,
+	[comment_text] [varchar](500) NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[comment_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[direct_messages]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[direct_messages](
+	[message_id] [int] NOT NULL,
+	[sender_id] [int] NOT NULL,
+	[receiver_id] [int] NOT NULL,
+	[message_text] [varchar](500) NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[message_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[followers]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[followers](
+	[follower_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[follower_user_id] [int] NOT NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[follower_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[followers_requests]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[followers_requests](
+	[request_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[follower_user_id] [int] NOT NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[request_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[hashtags]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[hashtags](
+	[hashtag_id] [int] NOT NULL,
+	[hashtag_name] [varchar](50) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[hashtag_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[likes]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[likes](
+	[like_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[post_id] [int] NOT NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[like_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[notifications]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[notifications](
+	[notification_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[notification_text] [varchar](500) NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[notification_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[post_hashtags]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[post_hashtags](
+	[post_id] [int] NOT NULL,
+	[hashtag_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[post_id] ASC,
+	[hashtag_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[posts]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[posts](
+	[post_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[caption] [varchar](500) NULL,
+	[image_url] [varchar](255) NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[post_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[stories]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[stories](
+	[story_id] [int] NOT NULL,
+	[user_id] [int] NOT NULL,
+	[image_url] [varchar](255) NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[story_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[users]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[users](
+	[user_id] [int] NOT NULL,
+	[username] [varchar](50) NOT NULL,
+	[email] [varchar](100) NOT NULL,
+	[password] [varchar](100) NOT NULL,
+	[created_at] [datetime] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[user_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[comments] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[direct_messages] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[followers] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[followers_requests] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[likes] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[notifications] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[posts] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[stories] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[users] ADD  DEFAULT (getdate()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[comments]  WITH CHECK ADD FOREIGN KEY([post_id])
+REFERENCES [dbo].[posts] ([post_id])
+GO
+ALTER TABLE [dbo].[comments]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[direct_messages]  WITH CHECK ADD FOREIGN KEY([receiver_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[direct_messages]  WITH CHECK ADD FOREIGN KEY([sender_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[followers]  WITH CHECK ADD FOREIGN KEY([follower_user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[followers]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[followers_requests]  WITH CHECK ADD FOREIGN KEY([follower_user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[followers_requests]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[likes]  WITH CHECK ADD FOREIGN KEY([post_id])
+REFERENCES [dbo].[posts] ([post_id])
+GO
+ALTER TABLE [dbo].[likes]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[notifications]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[post_hashtags]  WITH CHECK ADD FOREIGN KEY([hashtag_id])
+REFERENCES [dbo].[hashtags] ([hashtag_id])
+GO
+ALTER TABLE [dbo].[post_hashtags]  WITH CHECK ADD FOREIGN KEY([post_id])
+REFERENCES [dbo].[posts] ([post_id])
+GO
+ALTER TABLE [dbo].[posts]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+ALTER TABLE [dbo].[stories]  WITH CHECK ADD FOREIGN KEY([user_id])
+REFERENCES [dbo].[users] ([user_id])
+GO
+/****** Object:  StoredProcedure [dbo].[InsertUser]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[InsertUser]
+    @newUsername VARCHAR(50),
+    @newEmail VARCHAR(100),
+    @newPassword VARCHAR(100)
+AS
+BEGIN
+    INSERT INTO users (username, email, password)
+    VALUES (@newUsername, @newEmail, @newPassword);
+END;
+GO
+/****** Object:  StoredProcedure [dbo].[UpdatePost]    Script Date: 17.07.2023 10:07:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[UpdatePost]
+    @postId INT,
+    @newCaption VARCHAR(500)
+AS
+BEGIN
+    UPDATE posts
+    SET caption = @newCaption
+    WHERE post_id = @postId;
+END;
+GO
+USE [master]
+GO
+ALTER DATABASE [instagram] SET  READ_WRITE 
+GO
