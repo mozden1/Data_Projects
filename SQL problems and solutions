@@ -1,0 +1,150 @@
+1.Order Details
+
+Find order details made by Jill and Eva.
+Consider the Jill and Eva as first names of customers.
+Output the order date, details and cost along with the first name.
+Order records based on the customer id in ascending order.
+ 
+Answer
+select o.order_date, o.order_details, o.total_order_cost, c.first_name
+from orders o
+join customers c on o.cust_id = c.id
+where c.first_name in ('Jill', 'Eva')
+order by c.id asc
+
+2.Count the number of user events performed by MacBookPro users
+Answer
+select  event_name,
+        count(event_name) as num
+from playbook_events
+where device = 'macbook pro'
+group by event_name
+
+3.Number Of Bathrooms And Bedrooms
+Find the average number of bathrooms and bedrooms for each city’s property types. Output the result along with the city name and the property type.
+Answer
+select
+    city,
+    property_type,
+    avg(cast(bathrooms as float)),
+    avg(cast(bedrooms as float))  ( we  use cast function in order to change data type)
+from
+    airbnb_search_details
+group by
+city, property_type;
+4.Average salaries
+
+Compare each employee's salary with the average salary of the corresponding department.
+Output the department, first name, and salary of employees along with the average salary of that department.
+
+Answer
+select department,first_name,salary,AVG(cast(salary as float)) over(partition by department) as dptavgsalary
+from employee; (The OVER (PARTITION BY) expression is very useful for dividing data into subgroups and performing analytical operations on those groups.)
+
+5.Salaries differences
+Write a query that calculates the difference between the highest salaries found in the marketing and engineering departments. Output just the absolute difference in salaries.
+
+
+With CTE as
+(select D.department, max(salary) as MaxSalary
+from db_employee E
+Join db_dept D on E.department_id = D.id
+Where D.department in ('engineering', 'marketing')
+Group by D.department)
+
+Select Max (maxsalary) - Min(maxsalary) as Diff
+From CTE
+
+6.Unique Users Per Client Per Month
+Write a query that returns the number of unique users per client per month
+Answer
+
+select client_id, MONTH(time_id) as month, 
+MONTH() function is used to extract the month from a date or a datetime value. 
+count(distinct user_id) as no_of_users
+from fact_events
+group by client_id, MONTH(time_id)
+
+7.Number of Workers by Department Starting in April or Later
+Find the number of workers by department who joined in or after April.
+Output the department name along with the corresponding number of workers.
+Sort records based on the number of workers in descending order.
+Answer
+
+select  
+DEPARTMENT, COUNT(WORKER_ID)
+from worker
+WHERE MONTH(JOINING_DATE) >=4  
+MONTH() function is used to extract the month from a date or a datetime value. 
+GROUP BY DEPARTMENT
+8.Reviews of Hotel Arena
+Find the number of rows for each review score earned by 'Hotel Arena'. Output the hotel name (which should be 'Hotel Arena'), review score along with the corresponding number of rows with that score for the specified hotel.
+Answer
+
+select  hotel_name  , count(reviewer_score), reviewer_score
+from hotel_reviews
+where hotel_name = 'Hotel Arena'
+group by hotel_name ,reviewer_score
+
+9.Find how many times each artist appeared on the Spotify ranking list
+Find how many times each artist appeared on the Spotify ranking list
+Output the artist name along with the corresponding number of occurrences.
+Order records by the number of occurrences in descending order.
+Answer
+
+select artist, count(artist) from spotify_worldwide_daily_song_ranking
+group by artist;
+10.Count the number of movies that Abigail Breslin nominated for oscar
+Count the number of movies that Abigail Breslin was nominated for an oscar.
+Answer
+
+select count(nominee) from oscar_nominees
+where nominee=  'Abigail Breslin' ;
+
+11.Activity Rank
+Find the email activity rank for each user. Email activity rank is defined by the total number of emails sent. The user with the highest number of emails sent will have a rank of 1, and so on. Output the user, total emails, and their activity rank. Order records by the total emails in descending order. Sort users with the same number of emails in alphabetical order.
+In your rankings, return a unique value (i.e., a unique rank) even if multiple users have the same number of emails. For tie breaker use alphabetical order of the user usernames.
+
+Answer
+SELECT
+    from_user,
+    COUNT(from_user) AS total_emails,
+    ROW_NUMBER() OVER(ORDER BY COUNT(from_user) DESC, from_user ASC) AS activity_rank
+FROM
+    google_gmail_emails
+GROUP BY
+    from_user;
+12.Find matching hosts and guests in a way that they are both of the same gender and nationality
+Answer
+select  distinct g.guest_id,h.host_id from airbnb_guests as g  join airbnb_hosts as h on  g.nationality=h.nationality and 
+g.gender=h.gender
+13.Classify Business Type
+Classify each business as either a restaurant, cafe, school, or other.
+
+
+•	A restaurant should have the word 'restaurant' in the business name.
+•	A cafe should have either 'cafe', 'café', or 'coffee' in the business name.
+•	A school should have the word 'school' in the business name.
+•	All other businesses should be classified as 'other'.
+
+Answer
+
+SELECT
+    DISTINCT business_name,
+    CASE
+        WHEN business_name LIKE '%school%' THEN 'school'
+        WHEN business_name LIKE '%café%' THEN 'cafe'
+        WHEN business_name LIKE '%cafe%' THEN 'cafe'
+        WHEN business_name LIKE '%coffee%' THEN 'cafe'
+        WHEN business_name LIKE '%restaurant%' THEN 'restaurant'
+        ELSE 'other'
+    END AS classification
+FROM
+    sf_restaurant_health_violations;
+
+
+
+
+
+
+
